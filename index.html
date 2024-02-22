@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  h1, h2, p {
+    text-align: center;
+  }
+  .question {
+    margin-bottom: 20px;
+  }
+  .options {
+    list-style-type: none;
+    padding: 0;
+  }
+  .options li {
+    margin-bottom: 10px;
+  }
+  .options input[type="radio"] {
+    margin-right: 10px;
+  }
+  #submit-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Quiz App</h1>
+  <div id="quiz">
+    <div class="question" id="question"></div>
+    <ul class="options" id="options"></ul>
+    <button id="submit-btn">Submit</button>
+  </div>
+  <div id="result" style="display: none;">
+    <h2>Your Result</h2>
+    <p id="score"></p>
+  </div>
+</div>
+<script>
+  const quizData = [
+    {
+      question: "What is the capital of France?",
+      options: ["Paris", "London", "Berlin", "Madrid"],
+      answer: "Paris"
+    },
+    {
+      question: "What is 2 + 2?",
+      options: ["3", "4", "5", "6"],
+      answer: "4"
+    },
+    {
+      question: "Who wrote 'Romeo and Juliet'?",
+      options: ["Shakespeare", "Chaucer", "Milton", "Dickens"],
+      answer: "Shakespeare"
+    }
+  ];
+
+  const quizContainer = document.getElementById("quiz");
+  const questionElement = document.getElementById("question");
+  const optionsElement = document.getElementById("options");
+  const submitButton = document.getElementById("submit-btn");
+  const resultContainer = document.getElementById("result");
+  const scoreElement = document.getElementById("score");
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const currentQuizData = quizData[currentQuestion];
+    questionElement.innerText = currentQuizData.question;
+    optionsElement.innerHTML = "";
+    currentQuizData.options.forEach((option, index) => {
+      const li = document.createElement("li");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "option";
+      input.value = option;
+      li.appendChild(input);
+      li.appendChild(document.createTextNode(option));
+      optionsElement.appendChild(li);
+    });
+  }
+
+  function checkAnswer() {
+    const selectedOption = document.querySelector('input[name="option"]:checked');
+    if (!selectedOption) return;
+    if (selectedOption.value === quizData[currentQuestion].answer) {
+      score++;
+    }
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    quizContainer.style.display = "none";
+    resultContainer.style.display = "block";
+    scoreElement.innerText = `You scored ${score} out of ${quizData.length}.`;
+  }
+
+  submitButton.addEventListener("click", checkAnswer);
+
+  displayQuestion();
+</script>
+</body>
+</html>
